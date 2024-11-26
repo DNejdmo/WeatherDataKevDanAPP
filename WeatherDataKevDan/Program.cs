@@ -110,6 +110,22 @@ namespace WeatherDataKevDan
                             Console.ReadKey();
                             break;
 
+                        case "3":
+                            Console.WriteLine("Ange plats (Ute eller Inne):");
+                            string humidityPlaceInput = Console.ReadLine();
+
+                            var humiditySortedDays = weatherService.GetDaysSortedByHumidity(humidityPlaceInput);
+
+                            Console.WriteLine("\nTorraste till fuktigaste dagar enligt medelluftfuktighet:");
+                            foreach (var day in humiditySortedDays)
+                            {
+                                Console.WriteLine($"Datum: {day.Date.ToShortDateString()}, Medelluftfuktighet: {day.AverageHumidity:F2}%");
+                            }
+
+                            Console.ReadKey();
+                            break;
+
+
 
                         // Lägg till de andra alternativen här
 
