@@ -125,6 +125,18 @@ namespace WeatherDataKevDan
                             Console.ReadKey();
                             break;
 
+                        case "4":
+                            Console.WriteLine("Ange plats (Ute eller Inne):");
+                            string moldPlaceInput = Console.ReadLine();
+                            var moldSortedDays = weatherService.GetDaysSortedByMoldRisk(moldPlaceInput);
+                            Console.WriteLine("\nMögel Risken:");
+                            foreach (var day in moldSortedDays)
+                            {
+                                Console.WriteLine($"Datum: {day.Date.ToShortDateString()}, Medelluftfuktighet: {day.AverageHumidity:F2}%, Mögelrisk: {day.MoldRisk}");
+                            }
+                            Console.ReadKey();
+                            break;
+
 
 
                         // Lägg till de andra alternativen här

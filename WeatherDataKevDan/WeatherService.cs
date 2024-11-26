@@ -67,7 +67,29 @@ public class WeatherService
         // Konvertera till en lista av tuples
         return groupedData.Select(g => (g.Date, g.AverageHumidity)).ToList();
     }
-
-
+    public List<(DateTime Date, double AverageHumidity, string MoldRisk)> GetDaysSortedByMoldRisk(string place)
+    {
+        var groupedData = _context.WeatherData
+            .Where(w => w.Luftfuktighet.HasValue && w.Plats.ToLower() == place.ToLower())
+            .GroupBy(w => w.Datum.Date)
+            .Select(g => new
+            {
+                Date = g.Key,
+                AverageHumidity = g.Average(w => w.Luftfuktighet.Value)
+            })
+            .OrderBy(d => d.AverageHumidity)
+            .ToList();
+        return groupedData.Select(g =>
+        {
+            string moldRisk;
+            if (g.AverageHumidity < 60)
+                moldRisk = "låg risk";
+            else if (g.AverageHumidity >= 60 && g.AverageHumidity < 70)
+                moldRisk = "Medel risk";
+            else
+                moldRisk = "Hög risk";
+            return (g.Date, g.AverageHumidity, moldRisk);
+        }).ToList();
+    }
 }
 
