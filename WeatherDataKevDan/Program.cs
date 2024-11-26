@@ -82,6 +82,8 @@ namespace WeatherDataKevDan
                             break;
 
                         // Lägg till de andra alternativen här
+                        case "5": MLAutumn(); break;
+                        case "6": MLWinter(); break;
 
                         case "7":
                             Console.WriteLine("Avslutar programmet...");
@@ -100,6 +102,30 @@ namespace WeatherDataKevDan
                     }
                 }
             }
+        }
+        public static void MLAutumn()
+        {
+            int year = 2016;
+            DateTime startOfAutumn = new DateTime(year, 9, 1);
+            DateTime endOfAutumn = new DateTime(year, 11, 30);
+            Console.WriteLine("Meteorologisk höst för året 2016:");
+            Console.WriteLine($"Start : {startOfAutumn.ToShortDateString()}");
+            Console.WriteLine($"Slut : {endOfAutumn.ToShortDateString()}");
+        }
+        public static void MLWinter()
+        {
+            //Nuvarande år
+            int year = 2016;
+            DateTime startOfWinter = new DateTime(year, 12, 1);
+            DateTime endOfWinter = new DateTime(year + 1, 2, 28);
+            //kollar om skottår
+            if (DateTime.IsLeapYear(year + 1))
+            {
+                endOfWinter = new DateTime(year + 1, 2, 29);
+            }
+            Console.WriteLine("Meteorologisk vinter 2016:");
+            Console.WriteLine($"Start: {startOfWinter.ToShortDateString()}");
+            Console.WriteLine($"Slut: {endOfWinter.ToShortDateString()}");
         }
     }
 }
