@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <Content Include="Data\VäderData.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 

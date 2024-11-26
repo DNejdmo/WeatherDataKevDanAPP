@@ -6,34 +6,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WeatherDataKevDan.Models;
+using Microsoft.EntityFrameworkCore;
 
-
-public class WDContext : DbContext
-
+namespace WeatherDataKevDan.Models
 {
-    private const string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Weather;Integrated Security=True;";
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    public class WDContext : DbContext
     {
-        if (!optionsBuilder.IsConfigured)
+        public WDContext(DbContextOptions<WDContext> options) : base(options)
         {
-            var config = new ConfigurationBuilder()
-                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                .AddJsonFile("appsettings.json")
-                .Build();
-
-            var connectionString = config.GetConnectionString("DefaultConnection");
-            optionsBuilder.UseSqlServer(connectionString);
         }
+
+        public DbSet<WeatherData> WeatherData { get; set; }
     }
-
-
-    public DbSet<WeatherData> WeatherData { get; set; }
 }
-
-
-
-//DataImporter.ImportCsvToDatabase("C:\\Users\\dnejd\\OneDrive\\Skrivbord\\VäderData.csv"); ////Importerar data till tabellen WeatherData. Välj din sökväg.
 
 
 
