@@ -3,15 +3,12 @@ using WeatherDataKevDan.Models;
 using System.IO;
 using System.Linq;
 using WeatherDataKevDan;
-using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 
 namespace WeatherDataKevDan
 {
-
     internal partial class Program
     {
-
         private static void Main(string[] args)
         {
             // Läser appsettings.json för att hämta connection string
@@ -31,7 +28,11 @@ namespace WeatherDataKevDan
             {
                 // Skapa och uppdatera databasen om den inte redan finns
                 context.Database.Migrate();
-            
+
+                // Importera data från CSV om inte redan gjort
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "data", "väderdata.csv"); 
+                DataImporter.ImportCsvToDatabase(filePath, context); // Importera CSV-data till databasen
+
                 var weatherService = new WeatherService(context);
 
                 bool exit = false;
@@ -55,7 +56,6 @@ namespace WeatherDataKevDan
                     switch (userInput)
                     {
                         case "1":
-
                             // Be användaren att ange ett datum
                             Console.WriteLine("Ange ett datum (i formatet YYYY-MM-DD):");
                             string dateInput = Console.ReadLine();
@@ -81,26 +81,7 @@ namespace WeatherDataKevDan
                             Console.ReadKey();
                             break;
 
-
-                        case "2":
-                            //Metod för att sortera varmaste till kallaste dagen enligt medeltemperatur per dag, ute och inne. 
-                            break;
-
-                        case "3":
-                            //Metod för att sortera torraste till fuktigaste dagen enligt medelluftfuktighet per dag, ute och inne
-                            break;
-
-                        case "4":
-                            //Sortering av minst till störst risk för mögel, ute och inne
-                            break;
-
-                        case "5":
-                            //Presentera datum för meteorologisk Höst
-                            break;
-
-                        case "6":
-                            //Presentera datum för meteorologisk Vinter
-                            break;
+                        // Lägg till de andra alternativen här
 
                         case "7":
                             Console.WriteLine("Avslutar programmet...");
@@ -122,5 +103,3 @@ namespace WeatherDataKevDan
         }
     }
 }
-
-
