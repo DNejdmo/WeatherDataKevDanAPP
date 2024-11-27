@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
+using System.Linq;
 using WeatherDataKevDan.Models;
 
 public class WeatherService
@@ -89,6 +90,28 @@ public class WeatherService
             else
                 moldRisk = "Hög risk";
             return (g.Date, g.AverageHumidity, moldRisk);
+        }).ToList();
+    }
+    public List<(DateTime Date, double SeasonTemp, string Season)> GetSeason(string place)
+    {
+        var groupedData = _context.WeatherData
+            .Where(w => w.Temp.HasValue && w.Plats == "Ute")
+            .GroupBy(w => w.Datum.Date)
+            .Select(g => new
+            {
+                Date = g.Key,
+                SeasonalTemperature = g.Average(w => w.Temp.Value)
+            })
+            .OrderBy(d => d.SeasonalTemperature)
+            .ToList();
+        return groupedData.Select(g =>
+        {
+            string seasonCalc;
+            if (g.SeasonalTemperature > 0.0)
+                seasonCalc = "Höst";
+            else
+                seasonCalc = "Vinter";
+            return (g.Date, g.SeasonalTemperature, seasonCalc);
         }).ToList();
     }
 }

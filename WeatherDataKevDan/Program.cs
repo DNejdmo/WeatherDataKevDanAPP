@@ -45,8 +45,8 @@ namespace WeatherDataKevDan
                     Console.WriteLine("2. Sortera varmaste till kallaste dagen enligt medeltemperatur per dag");
                     Console.WriteLine("3. Sortera torraste till fuktigaste dagen enligt medelluftfuktighet per dag");
                     Console.WriteLine("4. Sortera minst till störst risk för mögel");
-                    Console.WriteLine("5. Presentera datum för meteorologisk Höst");
-                    Console.WriteLine("6. Presentera datum för meteorologisk Vinter");
+                    Console.WriteLine("5. Presentera datum för meteorologisk Höst och Vinter");
+                    Console.WriteLine("6. ---");
                     Console.WriteLine("7. Avsluta");
 
                     Console.Write("Ange ditt val: ");
@@ -136,9 +136,16 @@ namespace WeatherDataKevDan
                             Console.ReadKey();
                             break;
 
-
-                        case "5": MLAutumn(); break;
-                        case "6": MLWinter(); break;
+                        case "5":
+                            string seasonOutput = "Ute";
+                            var seasonOutputData = weatherService.GetSeason(seasonOutput);
+                            Console.WriteLine("Meteoroliska datum för höst och vinter:");
+                            foreach (var day in seasonOutputData)
+                            {
+                                Console.WriteLine($"Datum: {day.Date.ToShortDateString()}, Medeltemperatur: {day.SeasonTemp:F2}%, Säsong: {day.Season}");
+                            }
+                            Console.ReadKey();
+                            break;
 
                         case "7":
                             Console.WriteLine("Avslutar programmet...");
@@ -157,30 +164,6 @@ namespace WeatherDataKevDan
                     }
                 }
             }
-        }
-        public static void MLAutumn()
-        {
-            int year = 2016;
-            DateTime startOfAutumn = new DateTime(year, 9, 1);
-            DateTime endOfAutumn = new DateTime(year, 11, 30);
-            Console.WriteLine("Meteorologisk höst för året 2016:");
-            Console.WriteLine($"Start : {startOfAutumn.ToShortDateString()}");
-            Console.WriteLine($"Slut : {endOfAutumn.ToShortDateString()}");
-        }
-        public static void MLWinter()
-        {
-            //Nuvarande år
-            int year = 2016;
-            DateTime startOfWinter = new DateTime(year, 12, 1);
-            DateTime endOfWinter = new DateTime(year + 1, 2, 28);
-            //kollar om skottår
-            if (DateTime.IsLeapYear(year + 1))
-            {
-                endOfWinter = new DateTime(year + 1, 2, 29);
-            }
-            Console.WriteLine("Meteorologisk vinter 2016:");
-            Console.WriteLine($"Start: {startOfWinter.ToShortDateString()}");
-            Console.WriteLine($"Slut: {endOfWinter.ToShortDateString()}");
         }
     }
 }
