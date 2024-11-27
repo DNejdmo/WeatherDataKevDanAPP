@@ -46,8 +46,7 @@ namespace WeatherDataKevDan
                     Console.WriteLine("3. Sortera torraste till fuktigaste dagen enligt medelluftfuktighet per dag");
                     Console.WriteLine("4. Sortera minst till störst risk för mögel");
                     Console.WriteLine("5. Presentera datum för meteorologisk Höst och Vinter");
-                    Console.WriteLine("6. ---");
-                    Console.WriteLine("7. Avsluta");
+                    Console.WriteLine("0. Avsluta");
 
                     Console.Write("Ange ditt val: ");
                     string userInput = Console.ReadLine();
@@ -110,6 +109,8 @@ namespace WeatherDataKevDan
                             break;
 
                         case "3":
+                            Console.Clear();
+                            Console.WriteLine("Sortera fuktigaste dagen baserat på medelluftfuktighet per dag\n");
                             Console.WriteLine("Ange plats (Ute eller Inne):");
                             string humidityPlaceInput = Console.ReadLine();
 
@@ -125,10 +126,11 @@ namespace WeatherDataKevDan
                             break;
 
                         case "4":
+                            Console.Clear();
                             Console.WriteLine("Ange plats (Ute eller Inne):");
                             string moldPlaceInput = Console.ReadLine();
                             var moldSortedDays = weatherService.GetDaysSortedByMoldRisk(moldPlaceInput);
-                            Console.WriteLine("\nMögel Risken:");
+                            Console.WriteLine("\nMögelRisk:");
                             foreach (var day in moldSortedDays)
                             {
                                 Console.WriteLine($"Datum: {day.Date.ToShortDateString()}, Medelluftfuktighet: {day.AverageHumidity:F2}%, Mögelrisk: {day.MoldRisk}");
@@ -137,6 +139,7 @@ namespace WeatherDataKevDan
                             break;
 
                         case "5":
+                            Console.Clear();
                             string seasonOutput = "Ute";
                             var seasonOutputData = weatherService.GetSeason(seasonOutput);
                             Console.WriteLine("Meteoroliska datum för höst och vinter:");
@@ -147,7 +150,7 @@ namespace WeatherDataKevDan
                             Console.ReadKey();
                             break;
 
-                        case "7":
+                        case "0":
                             Console.WriteLine("Avslutar programmet...");
                             exit = true;
                             break;

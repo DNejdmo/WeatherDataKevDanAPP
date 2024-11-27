@@ -62,7 +62,7 @@ public class WeatherService
                 Date = g.Key,
                 AverageHumidity = g.Average(w => w.Luftfuktighet.Value) // Beräkna medelluftfuktighet
             })
-            .OrderBy(d => d.AverageHumidity) // Sortera från lägsta till högsta
+            .OrderByDescending(d => d.AverageHumidity) // Sortera från lägsta till högsta
             .ToList();
 
         // Konvertera till en lista av tuples
@@ -102,17 +102,39 @@ public class WeatherService
                 Date = g.Key,
                 SeasonalTemperature = g.Average(w => w.Temp.Value)
             })
-            .OrderBy(d => d.SeasonalTemperature)
+            .OrderBy(d => d.Date)
             .ToList();
-        return groupedData.Select(g =>
+        List<(DateTime Date, double SeasonTemp, string Season)> result = new List<(DateTime, double, string)>();
+        int consecutiveDaysBelowZero = 0;
+        bool winterStarted = false;
+        //DateTime winterStartDate = default;
+        foreach (var g in groupedData)
         {
             string seasonCalc;
-            if (g.SeasonalTemperature > 0.0)
-                seasonCalc = "Höst";
+            if (g.SeasonalTemperature <= 0.0)
+            {
+                consecutiveDaysBelowZero++;
+                if (consecutiveDaysBelowZero == 5)
+                {
+                    winterStarted = true; //Vintern har kommit
+                }
+                seasonCalc = winterStarted ? "Vinter" : "Höst"; //Om vinter har startat eller är på väg att starta
+            }
             else
-                seasonCalc = "Vinter";
-            return (g.Date, g.SeasonalTemperature, seasonCalc);
-        }).ToList();
+            {
+                if (winterStarted)
+                {
+                    seasonCalc = "Vinter"; //Håller vintern som aktiv så länge
+                }
+                else
+                {
+                    seasonCalc = "Höst"; //Annars är det höst
+                }
+                consecutiveDaysBelowZero = 0; //Återställ räknaren om temperaturen är över 0 grader
+            }
+            result.Add((g.Date, g.SeasonalTemperature, seasonCalc));
+        }
+        return result;
     }
 }
 
