@@ -23,15 +23,14 @@ namespace WeatherDataKevDan
             var optionsBuilder = new DbContextOptionsBuilder<WDContext>();
             optionsBuilder.UseSqlServer(connectionString);
 
-            // Använder DbContextOptions för att skapa WDContext
             using (var context = new WDContext(optionsBuilder.Options))
             {
                 // Skapa och uppdatera databasen om den inte redan finns
                 context.Database.Migrate();
 
-                // Importera data från CSV om inte redan gjort
+                // Importera data från CSV
                 var filePath = Path.Combine(Directory.GetCurrentDirectory(), "data", "väderdata.csv"); 
-                DataImporter.ImportCsvToDatabase(filePath, context); // Importera CSV-data till databasen
+                DataImporter.ImportCsvToDatabase(filePath, context); 
 
                 var weatherService = new WeatherService(context);
 
@@ -126,8 +125,6 @@ namespace WeatherDataKevDan
                             break;
 
 
-
-                        // Lägg till de andra alternativen här
                         case "5": MLAutumn(); break;
                         case "6": MLWinter(); break;
 

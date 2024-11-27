@@ -50,7 +50,7 @@ public class WeatherService
         return groupedData.Select(g => (g.Date, g.AverageTemperature)).ToList();
     }
 
-    //Metod för att sortera på torraste till fuktigaste dag, inne ekker ute. Menyval 3. 
+    //Metod för att sortera på torraste till fuktigaste dag, inne eller ute. Menyval 3. 
     public List<(DateTime Date, double AverageHumidity)> GetDaysSortedByHumidity(string place)
     {
         var groupedData = _context.WeatherData
