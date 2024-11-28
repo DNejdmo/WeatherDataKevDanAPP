@@ -45,7 +45,8 @@ namespace WeatherDataKevDan
                     Console.WriteLine("2. Sortera varmaste till kallaste dagen enligt medeltemperatur per dag");
                     Console.WriteLine("3. Sortera torraste till fuktigaste dagen enligt medelluftfuktighet per dag");
                     Console.WriteLine("4. Sortera minst till störst risk för mögel");
-                    Console.WriteLine("5. Presentera datum för meteorologisk Höst och Vinter");
+                    Console.WriteLine("5. Presentera datum för meteorologisk höst");
+                    Console.WriteLine("6. Presentera datum för meteorologisk vinter");
                     Console.WriteLine("0. Avsluta");
 
                     Console.Write("Ange ditt val: ");
@@ -140,12 +141,32 @@ namespace WeatherDataKevDan
 
                         case "5":
                             Console.Clear();
-                            string seasonOutput = "Ute";
-                            var seasonOutputData = weatherService.GetSeason(seasonOutput);
-                            Console.WriteLine("Meteoroliska datum för höst och vinter:");
-                            foreach (var day in seasonOutputData)
+                            string autumnOutput = "Ute";
+                            DateTime ? autumnDate = weatherService.GetAutumnSeason(autumnOutput); //Bestämmer att de skall räkna utomhus temperatur
+                            Console.WriteLine("Meteoroliska datum för höst:");
+                            if (autumnDate.HasValue)
                             {
-                                Console.WriteLine($"Datum: {day.Date.ToShortDateString()}, Medeltemperatur: {day.SeasonTemp:F2}%, Säsong: {day.Season}");
+                                Console.WriteLine($"Hösten 2016 föll den: {autumnDate.Value.ToShortDateString()}");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Inga säsong hittades.");
+                            }
+                            Console.ReadKey();
+                            break;
+
+                        case "6":
+                            Console.Clear();
+                            string winterOutput = "Ute";
+                            DateTime? winterDate = weatherService.GetWinterSeason(winterOutput); //Bestämmer att de skall räkna utomhus temperatur
+                            Console.WriteLine("Meteoroliska datum för vinter:");
+                            if (winterDate.HasValue)
+                            {
+                                Console.WriteLine($"Vintern 2016 föll den: {winterDate.Value.ToShortDateString()}");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Inga säsong hittades.");
                             }
                             Console.ReadKey();
                             break;

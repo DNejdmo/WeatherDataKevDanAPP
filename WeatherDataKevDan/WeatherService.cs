@@ -82,6 +82,7 @@ public class WeatherService
             .ToList();
         return groupedData.Select(g =>
         {
+            //Uträkning för mögel risk baserad på luftfuktighetens %
             string moldRisk;
             if (g.AverageHumidity < 60)
                 moldRisk = "låg risk";
@@ -92,7 +93,7 @@ public class WeatherService
             return (g.Date, g.AverageHumidity, moldRisk);
         }).ToList();
     }
-    public List<(DateTime Date, double SeasonTemp, string Season)> GetSeason(string place)
+    public DateTime? GetAutumnSeason(string place)
     {
         var groupedData = _context.WeatherData
             .Where(w => w.Temp.HasValue && w.Plats == "Ute")
@@ -100,41 +101,37 @@ public class WeatherService
             .Select(g => new
             {
                 Date = g.Key,
-                SeasonalTemperature = g.Average(w => w.Temp.Value)
+                AutumnTemperature = g.Average(w => w.Temp.Value)
             })
             .OrderBy(d => d.Date)
             .ToList();
-        List<(DateTime Date, double SeasonTemp, string Season)> result = new List<(DateTime, double, string)>();
-        int consecutiveDaysBelowZero = 0;
-        bool winterStarted = false;
-        //DateTime winterStartDate = default;
-        foreach (var g in groupedData)
+        for (int i = 0; i < groupedData.Count - 4; i++)
         {
-            string seasonCalc;
-            if (g.SeasonalTemperature <= 0.0)
-            {
-                consecutiveDaysBelowZero++;
-                if (consecutiveDaysBelowZero == 5)
-                {
-                    winterStarted = true; //Vintern har kommit
-                }
-                seasonCalc = winterStarted ? "Vinter" : "Höst"; //Om vinter har startat eller är på väg att starta
-            }
-            else
-            {
-                if (winterStarted)
-                {
-                    seasonCalc = "Vinter"; //Håller vintern som aktiv så länge
-                }
-                else
-                {
-                    seasonCalc = "Höst"; //Annars är det höst
-                }
-                consecutiveDaysBelowZero = 0; //Återställ räknaren om temperaturen är över 0 grader
-            }
-            result.Add((g.Date, g.SeasonalTemperature, seasonCalc));
+            //Uträkning för hösten, längre än 10 grader och 5 dagar i följd
+            if (groupedData.Skip(i).Take(5).All(g => g.AutumnTemperature >= 0 && g.AutumnTemperature <= 10))
+                return groupedData[i].Date;
         }
-        return result;
+        return null;
+    }
+    public DateTime? GetWinterSeason(string place)
+    {
+        var groupedData = _context.WeatherData
+            .Where(w => w.Temp.HasValue && w.Plats == "Ute")
+            .GroupBy(w => w.Datum.Date)
+            .Select(g => new
+            {
+                Date = g.Key,
+                WinterTemperature = g.Average(w => w.Temp.Value)
+            })
+            .OrderBy(d => d.Date)
+            .ToList();
+        for (int i = 0; i < groupedData.Count - 4; i++)
+        {
+            //Uträkning för vinter, längre än 0.0 grader och 5 dagar i följd
+            if (groupedData.Skip(i).Take(5).All(g => g.WinterTemperature >= 0 && g.WinterTemperature <= 0.0))
+                return groupedData[i].Date;
+        }
+        return null;
     }
 }
 
