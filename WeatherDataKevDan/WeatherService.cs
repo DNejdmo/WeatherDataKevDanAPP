@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
-using System.Linq;
-using WeatherDataKevDan.Models;
+﻿using WeatherDataKevDan.Models;
 
 public class WeatherService
 {
@@ -62,7 +60,7 @@ public class WeatherService
                 Date = g.Key,
                 AverageHumidity = g.Average(w => w.Luftfuktighet.Value) // Beräkna medelluftfuktighet
             })
-            .OrderByDescending(d => d.AverageHumidity) // Sortera från lägsta till högsta
+            .OrderBy(d => d.AverageHumidity) // Sortera från lägsta till högsta
             .ToList();
 
         // Konvertera till en lista av tuples

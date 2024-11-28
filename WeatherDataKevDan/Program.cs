@@ -1,8 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WeatherDataKevDan.Models;
-using System.IO;
-using System.Linq;
-using WeatherDataKevDan;
 using Microsoft.Extensions.Configuration;
 
 namespace WeatherDataKevDan
@@ -55,12 +52,11 @@ namespace WeatherDataKevDan
                     switch (userInput)
                     {
                         case "1":
-                            // Be användaren att ange ett datum
                             Console.WriteLine("Ange ett datum (i formatet YYYY-MM-DD):");
                             string dateInput = Console.ReadLine();
 
                             // Be användaren att ange plats (Ute eller Inne, gemener eller versaler spelar ingen roll)
-                            Console.WriteLine("Ange plats (Ute eller Inne):");
+                            Console.Write("Ange plats (Ute eller Inne):");
                             string placeInput = Console.ReadLine();
 
                             // Konvertera användarens input till ett datum
@@ -69,22 +65,27 @@ namespace WeatherDataKevDan
                                 // Anropa metoden för att beräkna medeltemperaturen
                                 string result = weatherService.GetAverageTemperature(selectedDate, placeInput);
 
-                                // Skriv ut resultatet
-                                Console.WriteLine($"Medeltemperaturen var {result}°C. ");
+                                // Kontrollera om resultatet är ett felmeddelande eller en temperatur
+                                if (double.TryParse(result, out double averageTemp))
+                                {
+                                    Console.WriteLine($"Medeltemperaturen var {averageTemp}°C.");
+                                }
+                                else
+                                {
+                                    Console.WriteLine(result); // Skriver ut felmeddelande
+                                }
                             }
                             else
                             {
                                 Console.WriteLine("Felaktigt datumformat. Vänligen ange ett datum i formatet YYYY-MM-DD.");
                             }
 
-                            Console.ReadKey();
-                            break;
+                            Console.WriteLine("\nTryck på en tangent för att återgå till huvudmenyn...");
+                            Console.ReadKey(); break;
 
                         case "2":
                             Console.Clear();
                             Console.WriteLine("Sortera varmaste till kallaste dagen baserat på medeltemperatur per dag\n");
-
-                            // Be användaren ange plats
                             Console.Write("Ange plats (Ute eller Inne): ");
                             string selectedPlace = Console.ReadLine();
 
@@ -112,7 +113,7 @@ namespace WeatherDataKevDan
                         case "3":
                             Console.Clear();
                             Console.WriteLine("Sortera fuktigaste dagen baserat på medelluftfuktighet per dag\n");
-                            Console.WriteLine("Ange plats (Ute eller Inne):");
+                            Console.Write("Ange plats (Ute eller Inne):");
                             string humidityPlaceInput = Console.ReadLine();
 
                             var humiditySortedDays = weatherService.GetDaysSortedByHumidity(humidityPlaceInput);
@@ -123,12 +124,13 @@ namespace WeatherDataKevDan
                                 Console.WriteLine($"Datum: {day.Date.ToShortDateString()}, Medelluftfuktighet: {day.AverageHumidity:F2}%");
                             }
 
+                            Console.WriteLine("\nTryck på en tangent för att återgå till huvudmenyn...");
                             Console.ReadKey();
                             break;
 
                         case "4":
                             Console.Clear();
-                            Console.WriteLine("Ange plats (Ute eller Inne):");
+                            Console.Write("Ange plats (Ute eller Inne):");
                             string moldPlaceInput = Console.ReadLine();
                             var moldSortedDays = weatherService.GetDaysSortedByMoldRisk(moldPlaceInput);
                             Console.WriteLine("\nMögelRisk:");
@@ -136,6 +138,7 @@ namespace WeatherDataKevDan
                             {
                                 Console.WriteLine($"Datum: {day.Date.ToShortDateString()}, Medelluftfuktighet: {day.AverageHumidity:F2}%, Mögelrisk: {day.MoldRisk}");
                             }
+                            Console.WriteLine("\nTryck på en tangent för att återgå till huvudmenyn...");
                             Console.ReadKey();
                             break;
 
@@ -152,6 +155,7 @@ namespace WeatherDataKevDan
                             {
                                 Console.WriteLine("Inga säsong hittades.");
                             }
+                            Console.WriteLine("\nTryck på en tangent för att återgå till huvudmenyn...");
                             Console.ReadKey();
                             break;
 
@@ -168,6 +172,7 @@ namespace WeatherDataKevDan
                             {
                                 Console.WriteLine("Inga säsong hittades.");
                             }
+                            Console.WriteLine("\nTryck på en tangent för att återgå till huvudmenyn...");
                             Console.ReadKey();
                             break;
 
@@ -183,8 +188,8 @@ namespace WeatherDataKevDan
 
                     if (!exit)
                     {
-                        Console.WriteLine("\nTryck på en tangent för att fortsätta...");
-                        Console.ReadKey();
+                        //Console.WriteLine("\nTryck på en tangent för att fortsätta...");
+                        //Console.ReadKey();
                     }
                 }
             }

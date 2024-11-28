@@ -1,7 +1,5 @@
-﻿//klass och metod för att ladda in data från en csv-fil. Skall inte behövas göras igen.
-
-
-
+﻿
+//klass och metod för att ladda in data från en csv-fil.
 
 using WeatherDataKevDan.Models;
 using System.Globalization;

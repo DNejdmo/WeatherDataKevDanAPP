@@ -24,8 +24,4 @@ namespace WeatherDataKevDan
                 return new WDContext(optionsBuilder.Options);
             }
         }
-    
-
 }
-
-
